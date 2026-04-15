@@ -3,15 +3,18 @@ const ALLOWED_BUCKETS = ["private-transcoded-audio", "private-audio"];
 export async function onRequestGet(context) {
   const { request } = context;
   const url = new URL(request.url);
-  const bucket = url.searchParams.get("bucket");
   const object = url.searchParams.get("object");
 
-  if (!bucket || !object) {
+  if (!object) {
     return new Response(
-      JSON.stringify({ error: "Missing bucket or object parameter" }),
+      JSON.stringify({ error: "Missing object parameter" }),
       { status: 400, headers: { "Content-Type": "application/json" } }
     );
   }
+
+  const slashIndex = object.indexOf("/");
+  const bucket = slashIndex !== -1 ? object.slice(0, slashIndex) : object;
+  const objectPath = slashIndex !== -1 ? object.slice(slashIndex + 1) : "";
 
   if (!ALLOWED_BUCKETS.includes(bucket)) {
     return new Response(
@@ -20,7 +23,7 @@ export async function onRequestGet(context) {
     );
   }
 
-  const encodedObject = encodeURIComponent(object);
+  const encodedObject = encodeURIComponent(objectPath);
   const targetUrl = `https://untitled.stream/api/storage/buckets/${bucket}/objects/${encodedObject}/signedUrl?durationInSeconds=10800&cacheBufferInSeconds=600`;
 
   let res;
