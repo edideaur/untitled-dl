@@ -12,8 +12,8 @@ export async function onRequestGet(context) {
         Accept: "application/json",
       },
     });
-    const body = await res.text();
-    return new Response(body, {
+    const data = await res.json();
+    return new Response(JSON.stringify(data.project), {
       status: res.status,
       headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" },
     });
