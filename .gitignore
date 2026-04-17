@@ -1,0 +1,4 @@
+.env.development
+node_modules
+.vite
+dist
