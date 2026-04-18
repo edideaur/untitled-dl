@@ -1,6 +1,6 @@
 function extractObjectPath(url) {
   if (!url || typeof url !== 'string') return null;
-  const m = url.match(/\/object\/(?:sign|public|private)\/(.+?)(?:\?|$)/);
+  const m = url.match(/\/object\/(.+?)(?:\?|$)/);
   return m ? m[1] : null;
 }
 

@@ -11,5 +11,5 @@ export async function fetchSignedUrl(objectPath) {
   const res = await fetch(`${API_BASE}/api/signedUrl?object=${encodeURIComponent(objectPath)}`);
   if (!res.ok) return null;
   const data = await res.json();
-  return data.signedUrl ?? data.url ?? null;
+  return data.signedURL ?? data.signedUrl ?? data.url ?? null;
 }
