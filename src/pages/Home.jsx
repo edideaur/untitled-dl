@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { zip } from 'fflate';
-import { SunIcon, MoonIcon, DownloadIcon, PlayIcon, PauseIcon } from '../components/Icons';
+import { SunIcon, MoonIcon, DownloadIcon, PlayIcon, PauseIcon, DiscordIcon } from '../components/Icons';
 import { fetchProject, fetchSignedUrl } from '../utils/api';
 import { parseProject, formatDuration, formatTotalDuration } from '../utils/parseProject';
 
@@ -70,15 +70,35 @@ function TrackName({ name }) {
   );
 }
 
-const GithubLink = () => (
-  <a
-    href="https://github.com/edideaur/untitled-dl"
-    className="home__github"
-    target="_blank"
-    rel="noopener noreferrer"
-  >
-    ★ star me on GitHub
-  </a>
+const Links = () => (
+  <div className="home__links">
+    <a
+      href="https://github.com/edideaur/untitled-dl"
+      className="home__link"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      ★ GitHub
+    </a>
+    <span className="home__links-sep">·</span>
+    <a
+      href="https://discord.gg/TFzpfd9CV5"
+      className="home__link"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      <DiscordIcon size="1em" /> Discord
+    </a>
+    <span className="home__links-sep">·</span>
+    <a
+      href="https://ko-fi.com/edideaur"
+      className="home__link"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      ♥ donate
+    </a>
+  </div>
 );
 
 export default function Home() {
@@ -217,7 +237,7 @@ export default function Home() {
         setTrackProgress(p => ({ ...p, [track.id]: pct }));
       });
       const objUrl = URL.createObjectURL(blob);
-      const a = Object.assign(document.createElement('a'), { href: objUrl, download: `${sanitize(track.name)}.mp3` });
+      const a = Object.assign(document.createElement('a'), { href: objUrl, download: `${sanitize(track.name)}.${track.audioExt}` });
       document.body.appendChild(a); a.click(); document.body.removeChild(a);
       URL.revokeObjectURL(objUrl);
     } catch (err) {
@@ -247,7 +267,7 @@ export default function Home() {
         if (url) {
           const buf = await fetchWithProgress(url, ctrl.signal, () => {});
           const arr = await buf.arrayBuffer();
-          files[`${String(i + 1).padStart(2, '0')} - ${sanitize(tracks[i].name)}.mp3`] =
+          files[`${String(i + 1).padStart(2, '0')} - ${sanitize(tracks[i].name)}.${tracks[i].audioExt}`] =
             [new Uint8Array(arr), { level: 0 }];
         }
       } catch (err) {
@@ -313,7 +333,7 @@ export default function Home() {
         </form>
 
         {error && <p className="home__error">{error}</p>}
-        {!project && <GithubLink />}
+        {!project && <Links />}
       </div>
 
       {project && (
@@ -393,7 +413,7 @@ export default function Home() {
             ))}
           </div>
 
-          <GithubLink />
+          <Links />
         </div>
       )}
     </div>

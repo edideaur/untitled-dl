@@ -118,13 +118,27 @@ img    { display: block; max-width: 100%; }
 .home__submit:active:not(:disabled) { transform: scale(0.98); }
 .home__submit:disabled { opacity: 0.35; cursor: default; }
 
-.home__github {
-  align-self: flex-start;
+.home__links {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+}
+
+.home__links-sep {
+  color: var(--color-secondary-label);
+  opacity: 0.4;
+  font-size: 1.15rem;
+  user-select: none;
+}
+
+.home__link {
+  display: flex; align-items: center; gap: 0.35rem;
   font-size: 1.15rem; white-space: nowrap;
   color: var(--color-secondary-label);
   transition: color 0.15s ease;
 }
-.home__github:hover { color: var(--color-primary-label); }
+.home__link:hover { color: var(--color-primary-label); }
 
 .home__error { font-size: 1.2rem; color: #f34d4d; text-align: center; }
 

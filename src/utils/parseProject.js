@@ -5,18 +5,22 @@ function extractObjectPath(url) {
 }
 
 function preferredAudioPath(raw) {
-  const candidates = [raw.audio_url, raw.audio_fallback_url, raw.file_url]
-    .map(extractObjectPath).filter(Boolean);
-  return candidates.find(p => p.startsWith('private-audio/')) ?? candidates[0] ?? null;
+  return extractObjectPath(raw.audio_url)
+    ?? extractObjectPath(raw.audio_fallback_url)
+    ?? extractObjectPath(raw.file_url)
+    ?? null;
 }
 
 function normalizeTrack(raw, index) {
+  const audioPath = preferredAudioPath(raw);
+  const audioExt = audioPath ? audioPath.split('.').pop() : 'mp3';
   return {
     id: raw.id ?? `track-${index}`,
     index,
     name: raw.title ?? raw.name ?? `Track ${index + 1}`,
     duration: raw.duration ?? 0,
-    audioPath: preferredAudioPath(raw),
+    audioPath,
+    audioExt,
   };
 }
 
