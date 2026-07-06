@@ -16,5 +16,5 @@ export async function fetchSignedUrl(objectPath) {
 
 export function audioProxy(url) {
   if (!url) return url;
-  return `${API_BASE}/audio?src=${encodeURIComponent(url)}`;
+  return `${API_BASE}/api/audio?src=${encodeURIComponent(url)}`;
 }
