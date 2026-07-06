@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { zip } from 'fflate';
 import { SunIcon, MoonIcon, DownloadIcon, PlayIcon, PauseIcon, DiscordIcon } from '../components/Icons';
-import { fetchProject, fetchSignedUrl } from '../utils/api';
+import { fetchProject, fetchSignedUrl, audioProxy } from '../utils/api';
 import { parseProject, formatDuration, formatTotalDuration } from '../utils/parseProject';
 
 const DISCS = [
@@ -210,7 +210,7 @@ export default function Home() {
     try {
       const url = await fetchSignedUrl(track.audioPath);
       if (!url) return;
-      audio.src = url;
+      audio.src = audioProxy(url);
       await audio.play();
       setPlayingId(track.id);
     } catch (err) {
@@ -233,7 +233,7 @@ export default function Home() {
     try {
       const url = await fetchSignedUrl(track.audioPath);
       if (!url) return;
-      const blob = await fetchWithProgress(url, ctrl.signal, pct => {
+      const blob = await fetchWithProgress(audioProxy(url), ctrl.signal, pct => {
         setTrackProgress(p => ({ ...p, [track.id]: pct }));
       });
       const objUrl = URL.createObjectURL(blob);
@@ -265,7 +265,7 @@ export default function Home() {
       try {
         const url = await fetchSignedUrl(tracks[i].audioPath);
         if (url) {
-          const buf = await fetchWithProgress(url, ctrl.signal, () => {});
+          const buf = await fetchWithProgress(audioProxy(url), ctrl.signal, () => {});
           const arr = await buf.arrayBuffer();
           files[`${String(i + 1).padStart(2, '0')} - ${sanitize(tracks[i].name)}.${tracks[i].audioExt}`] =
             [new Uint8Array(arr), { level: 0 }];

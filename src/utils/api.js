@@ -13,3 +13,8 @@ export async function fetchSignedUrl(objectPath) {
   const data = await res.json();
   return data.signedURL ?? data.signedUrl ?? data.url ?? null;
 }
+
+export function audioProxy(url) {
+  if (!url) return url;
+  return `${API_BASE}/audio?src=${encodeURIComponent(url)}`;
+}
